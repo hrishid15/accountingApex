@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign up — SYMBAL ACCOUNTING APEX</title>
+  <link rel="stylesheet" href="auth-ui.css" />
+</head>
+<body class="page-login">
+  <div class="auth-card">
+    <header class="login-brand">
+      <img src="/assets/symbal-logo.png" alt="SYMBAL" class="login-brand-logo" width="56" height="56" />
+      <h1 class="login-brand-title">SYMBAL ACCOUNTING <span class="title-serif">apex</span></h1>
+    </header>
+    <p class="auth-sub">CREATE AN ACCOUNT — DEFAULT ROLE IS GRADER. AN ADMIN CAN PROMOTE YOU TO EXPERT.</p>
+    <div class="err" id="err"></div>
+    <form id="form">
+      <label for="email">EMAIL</label>
+      <input id="email" name="email" type="email" autocomplete="email" required />
+      <label for="password">PASSWORD</label>
+      <input id="password" name="password" type="password" autocomplete="new-password" minlength="6" required />
+      <button type="submit" class="btn" id="submit">CREATE ACCOUNT</button>
+    </form>
+    <div class="auth-footer">
+      ALREADY HAVE AN ACCOUNT? <a href="login.html">SIGN IN</a>.
+    </div>
+  </div>
+  <script type="module">
+    import { getSupabase, fetchMyProfile, roleHomePath, getSession } from './js/auth-core.js';
+
+    const errEl = document.getElementById('err');
+    const form = document.getElementById('form');
+    const submit = document.getElementById('submit');
+
+    function showErr(msg) {
+      errEl.textContent = msg;
+      errEl.classList.add('visible');
+    }
+
+    (async () => {
+      try {
+        const existing = await getSession();
+        if (existing) {
+          const profile = await fetchMyProfile();
+          if (profile) {
+            window.location.replace(roleHomePath(profile.role));
+            return;
+          }
+        }
+      } catch (e) {
+        showErr(e.message || String(e));
+      }
+    })();
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errEl.classList.remove('visible');
+      submit.disabled = true;
+      try {
+        const sb = await getSupabase();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const { data, error } = await sb.auth.signUp({ email, password });
+        if (error) throw error;
+        if (data.session) {
+          const profile = await fetchMyProfile();
+          if (!profile) throw new Error('Profile not created. Apply the database migration in Supabase.');
+          window.location.replace(roleHomePath(profile.role));
+          return;
+        }
+        showErr('CHECK YOUR EMAIL TO CONFIRM, THEN SIGN IN.');
+      } catch (err) {
+        showErr(err.message || 'SIGN UP FAILED');
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
