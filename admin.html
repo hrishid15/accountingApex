@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Console — Accounting APEX</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          borderRadius: {
+            none: '0',
+            sm: '0',
+            DEFAULT: '0',
+            md: '0',
+            lg: '0',
+            xl: '0',
+            '2xl': '0',
+            '3xl': '0',
+            full: '0',
+          },
+          colors: {
+            apexBg: '#f1f5f9',
+            apexCard: '#ffffff',
+            apexBorder: '#e2e8f0',
+            apexText: '#0f172a',
+            apexMuted: '#64748b',
+            apexAccent: '#2563eb',
+            apexAccentSoft: '#dbeafe',
+            apexPos: '#059669',
+            apexWarn: '#b45309',
+            apexDanger: '#dc2626',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['IBM Plex Mono', 'ui-monospace', 'monospace'],
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="m-0 min-h-screen bg-apexBg text-apexText font-sans">
+  <div id="admin-app" class="h-screen"></div>
+  <script type="module" src="/js/admin-dashboard.js"></script>
+</body>
+</html>
